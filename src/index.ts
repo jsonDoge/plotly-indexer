@@ -9,6 +9,11 @@ import idl from './farm.json' // your compiled Anchor IDL
 import { startApiServer } from './server'
 import { createAllEventTables } from './createAllTables'
 
+if (!process.env.FRONT_END_URL) {
+  console.error('Please set FRONT_END_URL in your .env file')
+  process.exit(1)
+}
+
 if (!process.env.SOLANA_CLUSTER_URL) {
   console.error('Please set SOLANA_CLUSTER_URL in your .env file')
   process.exit(1)

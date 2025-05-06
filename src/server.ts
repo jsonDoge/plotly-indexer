@@ -1,9 +1,17 @@
 import express from 'express'
+import cors from 'cors'
 import { Client } from 'pg'
 
 export const startApiServer = (db: Client) => {
   const app = express()
   const port = process.env.PORT || 3001
+
+  app.use(
+    cors({
+      origin: process.env.FRONT_END_URL, // allow your Next.js frontend
+      credentials: true,
+    }),
+  )
 
   // Example endpoint to fetch recent events
   app.get('/events', async (_, res) => {
