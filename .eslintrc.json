@@ -1,0 +1,36 @@
+{
+  "env": {
+    "es2020": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "airbnb",
+    "airbnb-typescript",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 11,
+    "sourceType": "module",
+    "project": ["./tsconfig.json"]
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "rules": {
+    "semi": [2, "never"],
+    "no-console": "off",
+    "linebreak-style": ["error", "unix"],
+    "import/prefer-default-export": ["off"],
+    "implicit-arrow-linebreak": "off",
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "import/no-import-module-exports": ["off"],
+    "consistent-return": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "args": "all",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "no-continue": "off"
+  }
+}
