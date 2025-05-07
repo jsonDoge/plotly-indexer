@@ -1,6 +1,7 @@
-import express from 'express'
+import express, { Request } from 'express'
 import cors from 'cors'
 import { Client } from 'pg'
+import { PublicKey } from '@solana/web3.js'
 
 export const startApiServer = (db: Client) => {
   const app = express()
@@ -85,6 +86,44 @@ export const startApiServer = (db: Client) => {
       res.json(mappedRows)
     } catch (err) {
       console.error('Error fetching growing seeds:', err)
+      res.status(500).send('Internal server error')
+    }
+  })
+
+  app.get('/seeds/:seedId', async (req: Request<{ seedId: string }>, res) => {
+    const { seedId } = req.params
+
+    let seedIdPub
+    try {
+      seedIdPub = new PublicKey(seedId) // Validate if seedId is a valid Solana PublicKey
+    } catch (err) {
+      console.error('Invalid seedId:', err)
+      res.status(400).send('Invalid seedId')
+      return
+    }
+    try {
+      const result = await db.query('SELECT * FROM seed_minted_events WHERE seed_id = $1', [seedIdPub.toString()])
+      if (result.rows.length === 0) {
+        res.status(404).send('Seed not found')
+        return
+      }
+      // Currently possible
+      // if (result.rows.length > 1) {
+      //   console.error('Multiple seeds found for seedId:', seedId)
+      //   res.status(500).send('Internal server error')
+      //   return
+      // }
+      const mappedRows = result.rows.map((row) => {
+        const parsedRow = {
+          ...row,
+        }
+        delete parsedRow.created_at
+        delete parsedRow.id
+        return parsedRow
+      })
+      res.json(mappedRows[0])
+    } catch (err) {
+      console.error('Error fetching seed:', err)
       res.status(500).send('Internal server error')
     }
   })
