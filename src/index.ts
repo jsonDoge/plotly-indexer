@@ -24,8 +24,12 @@ if (!process.env.DATABASE_URL) {
   process.exit(1)
 }
 
+if (!process.env.PLOTLY_PROGRAM_ID) {
+  console.error('Please set DATABASE_URL in your .env file')
+  process.exit(1)
+}
 // ENV
-const PROGRAM_ID = new PublicKey(idl.address)
+const PROGRAM_ID = new PublicKey(process.env.PLOTLY_PROGRAM_ID)
 
 const connection = new Connection(process.env.SOLANA_CLUSTER_URL, 'confirmed')
 
